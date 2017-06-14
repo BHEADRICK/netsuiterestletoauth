@@ -1,5 +1,5 @@
 {
-    "name": "mwesalesdev/NetSuite-OAuth",
+    "name": "mwesalesdev/netsuiteoauth",
     "description": "Provides a way to connect to NetSuite Restlets in a restful manner.",
     "license": "MIT",
     "keywords": ["mwesalesdev", "mwe", "mwesales", "netsuite", "oauth", "netsuite-oauth", "restlet", "restlets", "davidvarney", "david", "varney"],
@@ -15,7 +15,7 @@
     "require-dev": {},
     "autoload": {
         "psr-4": {
-            "mwesalesdev\\NetsuiteOauth\\": "src"
+            "mwesalesdev\\netsuiteoauth\\": "src"
         }
     }
 }
