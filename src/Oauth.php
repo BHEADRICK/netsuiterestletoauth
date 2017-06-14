@@ -1,6 +1,5 @@
 <?php
 namespace \Netsuite\Oauth;
-// vim: foldmethod=marker
 
 class Oauth {
     public function __construct($json_data, $url, $ckey, $csecret, $tkey, $tsecret, $account_number)
