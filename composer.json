@@ -15,7 +15,7 @@
     "require-dev": {},
     "autoload": {
         "psr-4": {
-            "mwesalesdev\\netsuiteoauth\\": "src"
+            "Mwe\\": "src"
         }
     }
 }
