@@ -1,5 +1,5 @@
 <?php
-namespace \Netsuite\Oauth;
+namespace Mwe;
 /**
  * A class for implementing a Signature Method
  * See section 9 ("Signing Requests") in the spec

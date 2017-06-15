@@ -1,5 +1,5 @@
 <?php
-namespace \Netsuite\Oauth;
+namespace Mwe;
 
 class OauthServer {
   protected $timestamp_threshold = 300; // in seconds, five minutes
