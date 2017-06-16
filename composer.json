@@ -14,8 +14,19 @@
     },
     "require-dev": {},
     "autoload": {
-        "psr-4": {
-            "Mwe\\": "src"
-        }
+        "classmap": [
+            "Oauth.php",
+            "OauthConsumer.php",
+            "OauthDataStore.php",
+            "OauthException.php",
+            "OauthRequest.php",
+            "OauthServer.php",
+            "OauthSignatureMethod.php",
+            "OauthSignatureMethod_HMAC_SHA1.php",
+            "OauthSignatureMethod_PLAINTEXT.php",
+            "OauthSignatureMethod_RSA_SHA1.php",
+            "OauthToken.php",
+            "OauthUtil.php"
+        ]
     }
 }
