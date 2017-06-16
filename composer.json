@@ -1,5 +1,5 @@
 {
-    "name": "mwesalesdev/netsuiteoauth",
+    "name": "mwesalesdev/netsuiterestletoauth",
     "description": "Provides a way to connect to NetSuite Restlets in a restful manner.",
     "license": "MIT",
     "keywords": ["mwesalesdev", "mwe", "mwesales", "netsuite", "oauth", "netsuite-oauth", "restlet", "restlets", "davidvarney", "david", "varney"],
@@ -10,23 +10,13 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "eher/oauth": "1.0.*"
     },
     "require-dev": {},
     "autoload": {
-        "classmap": [
-            "Oauth.php",
-            "OauthConsumer.php",
-            "OauthDataStore.php",
-            "OauthException.php",
-            "OauthRequest.php",
-            "OauthServer.php",
-            "OauthSignatureMethod.php",
-            "OauthSignatureMethod_HMAC_SHA1.php",
-            "OauthSignatureMethod_PLAINTEXT.php",
-            "OauthSignatureMethod_RSA_SHA1.php",
-            "OauthToken.php",
-            "OauthUtil.php"
-        ]
+        "psr-0": {
+            "Netsuite\\Restlet\\OAuth": "src"
+        }
     }
 }
