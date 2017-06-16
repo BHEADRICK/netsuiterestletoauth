@@ -1,5 +1,5 @@
 <?php
-namespace Mwe;
+namespace Netsuiteoauth;
 
 /**
  * The PLAINTEXT method does not provide any security protection and SHOULD only be used

@@ -1,5 +1,5 @@
 <?php
-namespace Mwe;
+namespace Netsuiteoauth;
 
 class OauthDataStore {
   function lookup_consumer($consumer_key) {

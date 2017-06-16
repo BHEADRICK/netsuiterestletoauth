@@ -1,5 +1,5 @@
 <?php
-namespace Mwe;
+namespace Netsuiteoauth;
 
 class OauthRequest {
   protected $parameters;

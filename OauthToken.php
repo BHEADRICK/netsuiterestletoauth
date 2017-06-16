@@ -1,5 +1,5 @@
 <?php
-namespace Mwe;
+namespace Netsuiteoauth;
 
 class OauthToken {
   // access tokens and request tokens

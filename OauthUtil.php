@@ -1,5 +1,5 @@
 <?php
-namespace Mwe;
+namespace Netsuiteoauth;
 
 class OauthUtil {
   public static function urlencode_rfc3986($input) {
