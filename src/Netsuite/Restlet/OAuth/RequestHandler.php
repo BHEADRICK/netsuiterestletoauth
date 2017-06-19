@@ -96,73 +96,70 @@ class RequestHandler
      * Make a request with this request handler
      *
      * @param string $method  one of GET, POST
-     * @param string $path    the path to hit
      * @param array  $options the array of params
      *
      * @return \stdClass response object
      */
-    public function request($method, $path, $options)
+    public function request($method, $options)
     {
-        // Ensure we have options
-        $options = $options ?: array();
-        // Take off the data param, we'll add it back after signing
-        $file = isset($options['data']) ? $options['data'] : false;
-        unset($options['data']);
-        // Get the oauth signature to put in the request header
-        $url = $this->baseUrl . $path;
-        $oauth = \Eher\OAuth\Request::from_consumer_and_token(
-            $this->consumer,
-            $this->token,
-            $method,
-            $url,
-            $options
-        );
-        $oauth->sign_request($this->signatureMethod, $this->consumer, $this->token);
-        $authHeader = $oauth->to_header();
-        $pieces = explode(' ', $authHeader, 2);
-        $authString = $pieces[1];
-        // Set up the request and get the response
-        $uri = new \GuzzleHttp\Psr7\Uri($url);
-        $guzzleOptions = [
-            'headers' => [
-                'Authorization' => $authString,
-                'User-Agent' => 'tumblr.php/' . $this->version,
-            ],
-            // Swallow exceptions since \Tumblr\API\Client will handle them
-            'http_errors' => false,
-        ];
-        if ($method === 'GET') {
-            $uri = $uri->withQuery(http_build_query($options));
-        } elseif ($method === 'POST') {
-            if (!$file) {
-                $guzzleOptions['form_params'] = $options;
-            } else {
-                // Add the files back now that we have the signature without them
-                $content_type = 'multipart';
-                $form = [];
-                foreach ($options as $name => $contents) {
-                    $form[] = [
-                        'name'      => $name,
-                        'contents'  => $contents,
-                    ];
-                }
-                foreach ((array) $file as $idx => $path) {
-                    $form[] = [
-                        'name'      => "data[$idx]",
-                        'contents'  => file_get_contents($path),
-                        'filename'  => pathinfo($path, PATHINFO_FILENAME),
-                    ];
-                }
-                $guzzleOptions['multipart'] = $form;
-            }
+        $url = $this->baseUrl . '?script=' . $this->script_id . '&deploy=' . $this->deploy_id;
+
+        switch ($method) {
+            case "GET":
+                $url .= '&searchId=' . $options['search_id'];
+            break;
         }
-        $response = $this->client->request($method, $uri, $guzzleOptions);
-        // Construct the object that the Client expects to see, and return it
-        $obj = new \stdClass;
-        $obj->status = $response->getStatusCode();
-        // Turn the stream into a string
-        $obj->body = $response->getBody()->__toString();
-        $obj->headers = $response->getHeaders();
-        return $obj;
+
+        $params = array(
+            'oauth_nonce' => $this->generateRandomString(),
+            'oauth_timestamp' => idate('U'),
+            'oauth_version' => '1.0',
+            'oauth_token' => $this->token->key,
+            'oauth_consumer_key' => $this->consumer->key,
+            'oauth_signature_method' => $this->signatureMethod->get_name()
+        );
+
+        $req = new \Eher\OAuth\Request($method, $url, $params);
+        $req->set_parameter('oauth_signature', $req->build_signature($this->signatureMethod, $this->consumer, $this->token));
+        $req->set_parameter('realm', $this->account_number);
+
+        switch ($method) {
+            case "GET":
+                $option = array(
+                    'http'=>array(
+                        'method'=>$method,
+                        'header' => $req->to_header() . ',realm="' . $this->account_number . '"'. " \r\n" . "Host: rest.na2.netsuite.com \r\n" . "Content-Type: application/json"
+                    )
+                );
+            break;
+            case "POST":
+                $option = array(
+                    'http'=>array(
+                        'method'=>$method,
+                        'header' => $req->to_header() . ',realm="' . $this->account_number . '"'. " \r\n" . "Host: rest.na2.netsuite.com \r\n" . "Content-Type: application/json",
+                        'content' => $options['json_data']
+                    )
+                );
+            break;
+        }
+        $context = stream_context_create($option);
+        return file_get_contents($url, false, $context);
+    }
+
+    /**
+     * Provides a random string for our request method
+     *
+     * @author David Varney <varney@mwesales.com>
+     * @return str $randomString
+     */
+    private function generateRandomString() {
+        $length = 20;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

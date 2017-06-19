@@ -4,7 +4,7 @@ namespace Netsuite\Restlet\OAuth;
 
 class Client
 {
-    private $apiKey;
+    //private $apiKey;
 
     /**
      * Create a new Client
@@ -34,7 +34,7 @@ class Client
      */
     public function setConsumer($consumerKey, $consumerSecret)
     {
-        $this->apiKey = $consumerKey;
+        //$this->apiKey = $consumerKey;
         $this->requestHandler->setConsumer($consumerKey, $consumerSecret);
     }
 
@@ -95,37 +95,33 @@ class Client
     /**
      * Make a GET request to the given endpoint and return the response
      *
-     * @param string $path      the path to call on
      * @param array  $options   the options to call with
-     * @param bool   $addApiKey whether or not to add the api key
      *
      * @return array the response object (parsed)
      */
-    public function getRequest($path, $options, $addApiKey)
+    public function getRequest($options)
     {
-        $response = $this->makeRequest('GET', $path, $options, $addApiKey);
+        $response = $this->makeRequest('GET', $options);
         return $this->parseResponse($response);
     }
 
     /**
      * Make a POST request to the given endpoint and return the response
      *
-     * @param string $path      the path to call on
      * @param array  $options   the options to call with
-     * @param bool   $addApiKey whether or not to add the api key
      *
      * @return array the response object (parsed)
      */
-    public function postRequest($path, $options, $addApiKey)
+    public function postRequest($options)
     {
-        if (isset($options['source']) && is_array($options['source'])) {
+        /*if (isset($options['source']) && is_array($options['source'])) {
             $sources = $options['source'];
             unset($options['source']);
             foreach ($sources as $i => $source) {
                 $options["source[$i]"] = $source;
             }
-        }
-        $response = $this->makeRequest('POST', $path, $options, $addApiKey);
+        }*/
+        $response = $this->makeRequest('POST', $options);
         return $this->parseResponse($response);
     }
 
@@ -139,32 +135,31 @@ class Client
      */
     private function parseResponse($response)
     {
-        $response->json = json_decode($response->body);
-        if ($response->status < 400) {
+        $response = json_decode($response, true);
+        return $response;
+        /*if ($response->status < 400) {
             return $response->json->response;
         } else {
             throw new RequestException($response);
-        }
+        }*/
     }
 
     /**
      * Make a request to the given endpoint and return the response
      *
      * @param string $method    the method to call: GET, POST
-     * @param string $path      the path to call on
      * @param array  $options   the options to call with
-     * @param bool   $addApiKey whether or not to add the api key
      *
      * @return \stdClass the response object (not parsed)
      */
-    private function makeRequest($method, $path, $options, $addApiKey)
+    private function makeRequest($method, $options)
     {
-        if ($addApiKey) {
+        /*if ($addApiKey) {
             $options = array_merge(
                 array('api_key' => $this->apiKey),
                 $options ?: array()
             );
-        }
-        return $this->requestHandler->request($method, $path, $options);
+        }*/
+        return $this->requestHandler->request($method, $options);
     }
 }
