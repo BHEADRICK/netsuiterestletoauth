@@ -19,12 +19,13 @@ class Client
      */
     public function __construct($consumerKey, $consumerSecret, $token, $secret, $account_number, $script_id, $deploy_id)
     {
+
         $this->requestHandler = new RequestHandler();
         $this->setConsumer($consumerKey, $consumerSecret);
         $this->setToken($token, $secret);
         $this->setAccountNumber($account_number);
-        $this->setScript($script);
-        $this->setDeploy($deploy);
+        $this->setScript($script_id);
+        $this->setDeploy($deploy_id);
     }
     /**
      * Set the consumer for this client
@@ -99,7 +100,7 @@ class Client
      *
      * @return array the response object (parsed)
      */
-    public function getRequest($options)
+    public function getRequest($options = [])
     {
         $response = $this->makeRequest('GET', $options);
         return $this->parseResponse($response);

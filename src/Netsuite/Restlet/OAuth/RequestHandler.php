@@ -21,7 +21,7 @@ class RequestHandler
     {
         $this->baseUrl = 'https://rest.na2.netsuite.com/app/site/hosting/restlet.nl';
         $this->version = '1.0';
-        $this->signatureMethod = new \Eher\OAuth\HmacSha1();
+        $this->signatureMethod = new HmacSha256();
         /*$this->client = new \GuzzleHttp\Client(array(
             'allow_redirects' => false,
         ));*/
@@ -86,10 +86,7 @@ class RequestHandler
      */
     public function setBaseUrl($url)
     {
-        // Ensure we have a trailing slash since it is expected in {@link request}.
-        if (substr($url, -1) !== '/') {
-            $url .= '/';
-        }
+      
         $this->baseUrl = $url;
     }
     /**
@@ -100,13 +97,18 @@ class RequestHandler
      *
      * @return \stdClass response object
      */
-    public function request($method, $options)
+    public function request($method, $options = [])
     {
         $url = $this->baseUrl . '?script=' . $this->script_id . '&deploy=' . $this->deploy_id;
 
         switch ($method) {
             case "GET":
-                $url .= '&searchId=' . $options['search_id'];
+            	if(!empty($options)){
+		            $url .= "&". implode("&", array_map(function($k,$v){
+				            return "$key=$v";
+			            }, $options));
+	            }
+
             break;
         }
 
@@ -123,12 +125,15 @@ class RequestHandler
         $req->set_parameter('oauth_signature', $req->build_signature($this->signatureMethod, $this->consumer, $this->token));
         $req->set_parameter('realm', $this->account_number);
 
+        $parsed_url = parse_url($url);
+        $host = $parsed_url['host'];
+
         switch ($method) {
             case "GET":
                 $option = array(
                     'http'=>array(
                         'method'=>$method,
-                        'header' => $req->to_header() . ',realm="' . $this->account_number . '"'. " \r\n" . "Host: rest.na2.netsuite.com \r\n" . "Content-Type: application/json"
+                        'header' => $req->to_header() . ',realm="' . $this->account_number . '"'. " \r\n" . "Host: $host \r\n" . "Content-Type: application/json"
                     )
                 );
             break;
@@ -136,7 +141,7 @@ class RequestHandler
                 $option = array(
                     'http'=>array(
                         'method'=>$method,
-                        'header' => $req->to_header() . ',realm="' . $this->account_number . '"'. " \r\n" . "Host: rest.na2.netsuite.com \r\n" . "Content-Type: application/json",
+                        'header' => $req->to_header() . ',realm="' . $this->account_number . '"'. " \r\n" . "Host: $host \r\n" . "Content-Type: application/json",
                         'content' => $options['json_data']
                     )
                 );
