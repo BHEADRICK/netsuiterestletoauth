@@ -1,12 +1,12 @@
 {
-    "name": "mwesalesdev/netsuiterestletoauth",
+    "name": "bheadrick/netsuiterestletoauth",
     "description": "Provides a way to connect to NetSuite Restlets in a restful manner.",
     "license": "MIT",
-    "keywords": ["mwesalesdev", "mwe", "mwesales", "netsuite", "oauth", "netsuite-oauth", "restlet", "restlets", "davidvarney", "david", "varney"],
+    "keywords": ["bheadrick","mwesalesdev", "mwe", "mwesales", "netsuite", "oauth", "netsuite-oauth", "restlet", "restlets", "davidvarney", "david", "varney"],
     "authors": [
         {
-            "name": "David Varney",
-            "email": "varney@mwesales.com"
+            "name": "Bryan Headrick",
+            "email": "bryan.d.headrick@gmail.com"
         }
     ],
     "require": {
