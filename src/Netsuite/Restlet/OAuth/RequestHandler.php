@@ -102,12 +102,12 @@ class RequestHandler
         $url = $this->baseUrl . '?script=' . $this->script_id . '&deploy=' . $this->deploy_id;
 
         switch ($method) {
-            case "GET":
-            	if(!empty($options)){
-		            $url .= "&". implode("&", array_map(function($k,$v){
-				            return "$key=$v";
-			            }, $options));
-	            }
+              case "GET":
+                if(!empty($options)){
+                    $url .= "&". implode("&", array_map(function($k,$v){
+                            return "$k=$v";
+                        }, array_keys($options), array_values($options)));
+                }
 
             break;
         }

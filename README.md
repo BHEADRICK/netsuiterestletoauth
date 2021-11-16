@@ -7,7 +7,7 @@
       $access_token,
       $token_secret,
       $ns_account_id,
-      #restlet_script_id,
+      $restlet_script_id,
       $restlet_deploy_id);
 
     $oauth->requestHandler->setBaseUrl($baseurl);
